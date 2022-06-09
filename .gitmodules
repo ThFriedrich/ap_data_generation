@@ -1,0 +1,6 @@
+[submodule "multem"]
+	path = multem
+	url = git@github.com:Ivanlh20/multem.git
+[submodule "atomic_specimen_creation"]
+	path = atomic_specimen_creation
+	url = git@github.com:ThFriedrich/atomic_specimen_creation.git
