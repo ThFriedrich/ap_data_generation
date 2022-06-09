@@ -3,7 +3,7 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
     
     % activate / deactivate tests and plotting stuff to check each function
     global b_test
-    b_test = False;
+    b_test = false;
     
     if nargin < 4
         target_dir = ['.' filesep 'Data_64'];
@@ -23,6 +23,7 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
     warning('off','all')
     
     addpath('functions');
+    addpath(['multem' filesep 'matlab_functions']);
     addpath(['atomic_specimen_creation' filesep 'src']);
 
     s.n_batch = 8;
@@ -42,7 +43,7 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
     s.NX_POT = 1440;                    % Potential sampling
 
     % Specimen information
-    cif_folder = ['cif_files' filesep 'pymatgen'];
+    cif_folder = 'pymatgen';
     cif_files = dir(cif_folder); 
     b_hid = startsWith({cif_files.name}, '.');
     b_dir = [cif_files.isdir];
@@ -81,7 +82,7 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
         writecell(header,log_path,'FileType','spreadsheet','Sheet',1,'Range','A1')
         
         tic;
-        msg = fprintf(' ');
+        reverseStr = '';
         for idx = idx_s:s.n_batch:s.NUM_DATA(i_dat) 
             n_batch = min([s.n_batch,(s.NUM_DATA(i_dat) - idx)]);
             for b = 1:n_batch
@@ -103,9 +104,10 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
             h5writeatt(hdf_file,'/','State', rng().State);           
             
             % Print progress to CLI
-            fprintf(repmat('\b', 1, msg));
-            str = [s.FILENAME , '   Progress: ' num2str(post_batch_idx) ,' / ' num2str(s.NUM_DATA(i_dat)) '   avg time =' num2str(toc/(post_batch_idx-idx_s),3) 's per sample \n'];
-            msg = fprintf(str);
+            str = [s.FILENAME , '   Progress: ' num2str(post_batch_idx) ,' / ' num2str(s.NUM_DATA(i_dat)) '   avg time =' num2str(toc/(post_batch_idx-idx_s),3) 's per sample'];
+            msg = sprintf(str);
+            fprintf([reverseStr, msg]);
+            reverseStr = repmat(sprintf('\b'), 1, length(msg));
         end    
     end
 end
@@ -175,7 +177,7 @@ function [X,Y, input_multislice, nx, g_max, spec] = rnd_prms(input_multislice, c
             col_ang = ap / bf_r;
             g_max = ilm_mrad_2_rAng(e0,col_ang);
             nx = ceil(g_max*2*s.OBJ_SIZE);
-            if nx >= s.NX_DET
+            if nx >= s.NX_DET && nx <= s.NX_POT
                 break;
             end
         end
