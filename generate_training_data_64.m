@@ -16,8 +16,7 @@ function generate_training_data_64(db_n, gpu_n, b_val, target_dir)
     end
     if nargin < 1
         db_n = 0;
-    end
-    
+    end   
     
     s.gpu = gpu_n+1;
     warning('off','all')
@@ -141,7 +140,11 @@ function [idx, rng_gen] = get_or_make_h5(hdf_file, s)
         h5writeatt(hdf_file,'/','Type',rng_gen.Type)
         h5writeatt(hdf_file,'/','idx',idx)
         h5writeatt(hdf_file,'/','arch',computer('arch'))
-        h5writeatt(hdf_file,'/','gpu',gpuDevice(s.gpu).Name)
+        if s.gpu >= 0
+            h5writeatt(hdf_file,'/','gpu',gpuDevice(s.gpu).Name)
+        else
+            h5writeatt(hdf_file,'/','gpu','None')
+        end
         h5writeatt(hdf_file,'/','matlab_ver',version('-release'))
     else
         idx = h5readatt(hdf_file,'/','idx');

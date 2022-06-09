@@ -7,9 +7,14 @@ function input_multislice = get_multem_parameters(nx, conv_angle, E0, gpu)
 
     %%%%%%%%%%%%%%%%%%%%% Set system configuration %%%%%%%%%%%%%%%%%%%%%
     input_multislice.system_conf.precision = 1;                           % eP_Float = 1, eP_double = 2
-    input_multislice.system_conf.device = 2;                              % eD_CPU = 1, eD_GPU = 2
-    input_multislice.system_conf.cpu_nthread = 4; 
-    input_multislice.system_conf.gpu_device = gpu;
+    if gpu >= 0
+        input_multislice.system_conf.device = 2;                          % eD_CPU = 1, eD_GPU = 2
+        input_multislice.system_conf.cpu_nthread = 1; 
+        input_multislice.system_conf.gpu_device = gpu;
+    else
+        input_multislice.system_conf.device = 1;
+        input_multislice.system_conf.cpu_nthread = abs(gpu); 
+    end  
 
     %%%%%%%%%%%%%%%%%%%% Set simulation experiment %%%%%%%%%%%%%%%%%%%%%
     % eTEMST_STEM=11, eTEMST_ISTEM=12, eTEMST_CBED=21, eTEMST_CBEI=22, eTEMST_ED=31, eTEMST_HRTEM=32, eTEMST_PED=41, eTEMST_HCTEM=42, eTEMST_EWFS=51, eTEMST_EWRS=52, 
