@@ -121,7 +121,6 @@ function [feature, label_k, label_r, probe, meta, spec] = run(input_multislice, 
     spec.alpha = inp.cond_lens_outer_aper_ang;
     spec.gmax = g_max;
     meta = single([inp.E_0, inp.cond_lens_outer_aper_ang, g_max, spec.step_size, max_sc]');
-
 end
 
 function [idx, rng_gen] = get_or_make_h5(hdf_file, s)
@@ -218,7 +217,6 @@ function [X, Y] = fcn_scan_points(step_size)
     sr2 = (step_size*3)/2;
     pts = linspace(-sr2,sr2,3);
     [X, Y] = meshgrid(pts,pts);
-
 end
 
 function input_multislice =  fcn_gen_specimen(trial_mat_par, trial_ori, trial_rot, trial_thick, lx, input_multislice)
